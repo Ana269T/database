@@ -1,32 +1,33 @@
 services:
-  db-ana:
+  db:
     build:
       context: ./MySQL
       dockerfile: Dockerfile
-    container_name: mysql-ana
+    container_name: mysql
     restart: always
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - ./MySQL/data:/var/lib/mysql
+      - ./MySQL/backups/backup.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - portafolio-network
     healthcheck:
-      test: ["CMD", "mysql" ,"-u", "portafolio-user", "-pCVEfL3^9CjoRJ#db"]
+      test: [ "CMD", "mysql", "-u", "portafolio-user", "-pCVEfL3^9CjoRJ#db" ]
       interval: 30s
       timeout: 10s
       retries: 5
 
-  adminer-ana:
-    image : adminer
-    container_name: adminer-ana
+  adminer:
+    image: adminer
+    container_name: adminer
     restart: always
     ports:
-      - "8081:8080"
+      - "8080:8080"
     networks:
       - portafolio-network
 
 networks:
   portafolio-network:
     driver: bridge
-    name : portafolio-network
+    name: portafolio-network
